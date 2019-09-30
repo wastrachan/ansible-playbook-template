@@ -1,0 +1,2 @@
+[common]
+0.0.0.0                 ansible_ssh_port=22
