@@ -12,12 +12,12 @@ Ansible configuration project template. Includes a barebones project framework, 
 2. Prepare the vault secret for the first time (this only needs to be done once):
 
 
-    dd if=/dev/urandom of=.vault_password count=20
-    git secret tell <user@email.com>
-    git secret add .vault_password
-    git secret hide
-    rm .vault_password
-    make vault-encrypt
+        dd if=/dev/urandom of=.vault_password count=20
+        git secret tell <user@email.com>
+        git secret add .vault_password
+        git secret hide
+        rm .vault_password
+        make vault-encrypt
 
 
 3. Run `make init` to install githooks.
