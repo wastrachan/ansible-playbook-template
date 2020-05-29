@@ -1,54 +1,59 @@
-# Copyright (c) 2019 Winston Astrachan
-#
-# Ansible Playbook Makefile
-#
+# Ansible Project Makefile
+# Copyright (c) 2020 Winston Astrachan
+
 SHELL=/bin/bash
+VAULT_FILES = group_vars/all.yml \
+              host_vars/testhost.com.yml
 
 .PHONY: help
 help:
 	@echo ""
 	@echo "Usage: make COMMAND"
 	@echo ""
-	@echo "Ansible Playbook Makefile"
+	@echo "Ansible Project Makefile"
 	@echo ""
 	@echo "Commands:"
 	@echo ""
-	@echo "  apply             Update all nodes in the inventory file"
-	@echo ""
-	@echo "  vault-open        Open the Ansible vault for editing in '$$EDITOR'"
+	@echo "  init              Initialize the project, run this after clone"
 	@echo "  vault-decrypt     Decrypt the Ansible Vault in-place"
 	@echo "  vault-encrypt     Re-encrypt the Ansible Vault"
-	@echo ""
 	@echo "  clean             Remove Ansible artifacts"
 	@echo ""
-
-.vault_password:
+	@echo "  bootstrap         Perform first-time setup on a host"
+	@echo "                        usage: make bootstrap host=testhost.com"
 	@echo ""
-	@echo "Creating .vault_password file."
-	@echo ""
-	@echo " Supply the password for the Ansible Vault,"
-	@echo " it will be saved in this file, and used on repeated runs:"
-	@read -s VAULTPASSWORD; \
-	echo "$$VAULTPASSWORD" > .vault_password;
+	@echo "  update-all        Update all hosts in the inventory file"
+	@echo "  update-some       Update a selection of hosts using ansible's limit operator"
+	@echo "                        usage: make update-some limit=staging"
 	@echo ""
 
-.PHONY: apply
-apply: .vault_password
-	ansible-playbook site.yml -i inventory -e 'ansible_ssh_user=root'
 
-.PHONY: vault-open
-vault-open: .vault_password
-	@ansible-vault edit group_vars/vault.yml
+.PHONY: init
+init:
+	./scripts/init.sh
 
 .PHONY: vault-decrypt
-vault-decrypt: .vault_password
-	@ansible-vault decrypt group_vars/vault.yml
+vault-decrypt:
+	@ansible-vault decrypt $(VAULT_FILES)
 
 .PHONY: vault-encrypt
-vault-encrypt: .vault_password
-	@ansible-vault encrypt group_vars/vault.yml
+vault-encrypt:
+	@ansible-vault encrypt $(VAULT_FILES)
+	@git add $(VAULT_FILES)
 
 .PHONY: clean
 clean:
 	find . -name "*.retry" -delete
 	find . -name "*.log" -delete
+
+.PHONY: bootstrap
+bootstrap:
+	ansible-playbook site.yml update.yml -i inventory.yml -l $(host) -u root -e 'ansible_ssh_port=22'
+
+.PHONY: update-all
+update-all:
+	ansible-playbook site.yml -i inventory.yml
+
+.PHONY: update-some
+update-some:
+	ansible-playbook site.yml -i inventory.yml -l $(limit)

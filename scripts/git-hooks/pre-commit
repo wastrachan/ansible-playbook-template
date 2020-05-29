@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Ensure all Ansible vaults are locked before commit
+
+echo ""
+echo "Locking up vault before commit..."
+make vault-encrypt || true
+echo ""
