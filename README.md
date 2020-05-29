@@ -19,6 +19,7 @@ Ansible configuration project template. Includes a barebones project framework, 
     rm .vault_password
     make vault-encrypt
 
+
 3. Run `make init` to install githooks.
 4. Replace this README with `README.template.md` and customize to your needs.
 5. Start building your roles, inventory, and variables.
