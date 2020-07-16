@@ -23,15 +23,15 @@ When you first checkout the project, run `make init` to set up the project and i
 5. Run Ansible for the first time: `make bootstrap host=testhost.com`
 
 #### Updating all Hosts
-You can update all hosts in a single command: `make update-all`.
+You can update all hosts in a single command: `make update`.
 
 #### Updating a List of Hosts
-You can update a single (or several) hosts by applying [limits](https://docs.ansible.com/ansible/latest/user_guide/intro_patterns.html). Pass a pattern in to `make update-some` to narrow your update.
+You can update a single (or several) hosts by applying [limits](https://docs.ansible.com/ansible/latest/user_guide/intro_patterns.html). Pass a pattern in to `make update limit=` to narrow your update.
 
-    make update-some limit=redis                # Update all hots with the redis role
-    make update-some limit=db3.testhost.com     # Update the host db3.testhost.com
-    make update-some limit=nginx:&staging       # Update all nginx staging servers
-    make update-some limit=percona:!prod        # Update all non-production database servers
+    make update limit=redis                # Update all hots with the redis role
+    make update limit=db3.testhost.com     # Update the host db3.testhost.com
+    make update limit=nginx:&staging       # Update all nginx staging servers
+    make update limit=percona:!prod        # Update all non-production database servers
 
 ## Execution on Remote Hosts
 The `ansible` utility can be used to execute ad-hoc commands on remote hosts in inventory. The general format of the command:
